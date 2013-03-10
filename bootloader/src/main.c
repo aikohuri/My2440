@@ -29,7 +29,7 @@ int main(int argc, char **argv)
    {
       rGPBDAT = (data<<5);
       data -= 1;
-      delay(1);
+      delay(100);
       if( data < 0x0 )
          data = 0x0F;
    }

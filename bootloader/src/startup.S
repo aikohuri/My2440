@@ -37,11 +37,40 @@ reset:
      */
     WRREG(INTSUBMSK, 0x7FFF, r0, r1)
 
-    /* FCLK:HCLK:PCLK = 1:2:4 */
-    /* default FCLK is 120 MHz ! */
+    /*
+     * FCLK:HCLK:PCLK = 1:3:6
+     * NOTE: The value set for CLKDIVN will be valid after PLL lock time.
+     */
     ldr     r0, =CLKDIVN
-    mov     r1, #3
+    mov     r1, #FCLK_3HCLK_6PCLK
     str     r1, [r0]
+
+    /*
+     * Enable PLLs
+     */
+    /*
+     * UPLL = 48 Mhz = UCLK (UCLK must be 48 Mhz)
+     * NOTE: when set MPLL & UPLL values, must set the UPLL value first and
+     *       then the MPLL value.
+     */
+    WRREG(UPLLCON, PLL_48MHZ, r0, r1)
+
+    /*
+     * NOTE: After UPLL setting, at least 7-clocks delay must be inserted for
+     * setting hardware be completed.
+     */
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+    /*
+     * MPLL = 405 Mhz (FCLK=405 Mhz, HCLK=135 Mhz, PCLK=67.5 Mhz)
+     */
+    WRREG(MPLLCON, PLL_405MHZ, r0, r1)
 
     /*
      * flush v4 I/D caches

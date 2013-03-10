@@ -89,17 +89,21 @@
 #define BANKCON7_DATA   SDRAM_64MB
 
 /* REFRESH parameter */
-#define REFEN           (0x1 << 23)    /* Refresh enable */
-#define TREFMD          (0x0 << 22)    /* CBR(CAS before RAS)/Auto refresh */
-#define Trp             (0x1 << 20)    /* 3clk */
-#define Trc             (0x3 << 18)    /* 7clk */
-#define Tchr            (0x0 << 16)    /* unused */
+#define REFEN           (0x1 << 23)     /* Refresh enable */
+#define TREFMD          (0x0 << 22)     /* CBR(CAS before RAS)/Auto refresh */
+#define Trp             (0x1 << 20)     /* 3 clk */
+#define Tsrc            (0x3 << 18)     /* 7 clk */
+#define REFCNT          (649)           /* period=10.37us, HCLK=135Mhz, (2048+1-10.37*135) */
+#define REFRESH_DATA    (REFEN|TREFMD|Trp|Tsrc|REFCNT)
 
-#define REFCNT          (1012)    /* period=10.37us, HCLK=100Mhz, (2048+1-10.37*100) */
+#define BURST_EN        (1<<7)
+#define SCKE_EN         (1<<5)          /* SDRAM power down mode enable control by SCKE */
+#define SCLK_EN         (1<<4)          /* SCLK is active only during the access */
+#define BK76MAP         (2)             /* BANK6/7 memory map: 128M/128M */
+#define BANKSIZE_DATA   (BURST_EN|SCKE_EN|SCLK_EN|BK76MAP)
 
-#define REFRESH_DATA    (REFEN|TREFMD|Trp|Trc|Tchr|REFCNT)
-#define BANKSIZE_DATA   (0xb2)    /* enable burst */
-#define MRSRB6_DATA     (0x30)
-#define MRSRB7_DATA     (0x30)
+#define CL3             (3<<4)          /* CAS latency = 3 clk */
+#define MRSRB6_DATA     (CL3)
+#define MRSRB7_DATA     (CL3)
 
 #endif /*MEMORY_CONTROLLER_H*/
